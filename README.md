@@ -44,5 +44,5 @@
 [5]: http://ramdajs.com
 [6]: https://www.npmjs.com/package/babel-plugin-ramda
 [7]: https://lodash.com
-[8]: https://github.com/lodash/babel-plugin-lodash
+[8]: https://www.npmjs.com/package/babel-plugin-lodash
 [9]: https://www.npmjs.com/browse/keyword/lodash-modularized
