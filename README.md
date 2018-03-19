@@ -28,6 +28,11 @@
  * all functions are unmanipulated with published sha512 hashes
  * source code is identical to one hosted in npm
  
+## @fully principles
+ * pragmatic over completeness or minimalism
+ * correctness over purity
+ * layman over functional goobly goop
+
 ## Common features
  * [pure function][4]
  * [currying][2]
