@@ -26,7 +26,6 @@ Like [Array.prototype.map][3], but made functional, added Object support, and pr
 > map('favorite.food', [{name: 'bob'}, {name: 'fred', favorite: {food: 'cake'}}])
 [undefined, 'cake']
 ```
-
 **Object support**
 ```js
 > map(value => value + 1, {a: 1, b: 2, c: 3})
@@ -46,6 +45,11 @@ Like [Array.prototype.map][3], but made functional, added Object support, and pr
 ## Specification
 ### `output_array = map(function callback(value, index), input_array)`
 ### `output_array = map(function callback(value, index))(input_array)`
+**empty input returns empty output**
+```js
+> map(x => x, [])
+[]
+```
 **pure, input is unchanged**
 ```js
 > input = [1, 2, 3]
@@ -55,7 +59,7 @@ Like [Array.prototype.map][3], but made functional, added Object support, and pr
 > input
 [1, 2, 3]
 ```
-**function is applied to each value in array in the same order as array**
+**function is applied to each value in array**
 ```js
 > map(value => ({value}), [1, 2, 3])
 [{value: 1}, {value: 2}, {value: 3}]
@@ -64,6 +68,11 @@ Like [Array.prototype.map][3], but made functional, added Object support, and pr
 ```js
 > map((value, index) => ({value, index}), [1, 2, 3])
 [{value: 1, index: 0}, {value: 2, index: 1}, {value: 3, index: 2}]
+```
+**same order in input as output**
+```js
+> map(value => ({value}), [1, 2, 3])
+[{value: 1}, {value: 2}, {value: 3}]
 ```
 **values in sparse arrays are treated as undefined**
 ```js
@@ -93,6 +102,11 @@ Error: oops
 
 ### `output_object = map(function callback(value, key), input_object)`
 ### `output_object = map(function callback(value, key))(input_object)`
+**empty input returns empty output**
+```js
+> map(x => x, {})
+{}
+```
 **pure, input is unchanged**
 ```js
 > input = {a: 1, b: 2, c: 3}
@@ -144,7 +158,64 @@ Error: oops
 
 ### `output_array = map(path, input_array)`
 ### `output_array = map(path)(input_array)`
+**empty input returns empty output**
 ```js
+> map('name', [])
+[]
+```
+**pure, input is unchanged**
+```js
+> input = [{name: 'bob', age: 34}, {name: 'fred', age: 18}]
+[{name: 'bob', age: 34}, {name: 'fred', age: 18}]
+> map('name', [{name: 'bob', age: 34}, {name: 'fred', age: 18}])
+['bob', 'fred']
+> input
+[{name: 'bob', age: 34}, {name: 'fred', age: 18}]
+```
+**string is path applied as accessor for each object in array**
+```js
+> map('name', [{name: 'bob', age: 34}, {name: 'fred', age: 18}])
+['bob', 'fred']
+```
+**strings are dot separated paths applied as accessor for each object in array**
+```js
+> map('school.name', [{name: 'bob', school: {name: 'oxford'}}, {name: 'fred', school: {name: 'stanford'}])
+['oxford', 'standford']
+```
+**same order in input as output**
+```js
+> map('name', [{name: 'bob', age: 34}, {name: 'fred', age: 18}])
+['bob', 'fred']
+```
+**objects with no matching key return undefined**
+```js
+> map('name', [{name: 'bob', age: 34}, {age: 18}])
+['bob', undefined]
+```
+**undefined values in array return undefined**
+```js
+> map('name', [{name: 'bob', age: 34}, undefined])
+['bob', undefined]
+```
+**values in sparse arrays are treated as undefined**
+```js
+> map('name', [{name: 'bob', age: 34}, , {name: 'alice', age: 27}])
+['bob', undefined, 'alice']
+```
+**currying**
+```js
+> map('name')([{name: 'bob', age: 34}, {name: 'fred', age: 18}])
+['bob', 'fred']
+```
+**first parameter must be a function or string**
+```js
+> map(undefined, [])
+Error: first parameter must be a function or string
+```
+**empty string is rejected as likely programming error**
+```js
+> map('', [{name: 'bob', age: 34}, {name: 'fred', age: 18}])
+Error: first parameter cannot be empty string
 ```
 
 ### expected failures
